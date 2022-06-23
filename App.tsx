@@ -18,16 +18,18 @@ import {
 } from "@react-navigation/bottom-tabs";
 
 import { Homepage } from "./src/homepage/Homepage";
-import { NewGame } from "./src/newgame/NewGame";
+import { CreateGame } from "./src/creategame/CreateGame";
 import { Scores } from "./src/scores/Scores";
+import { Game } from "./src/game/Game";
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  Game: undefined;
 };
 
 export type RootTabParamList = {
   Home: undefined;
-  NewGame: undefined;
+  CreateGame: undefined;
   Scores: undefined;
 };
 
@@ -50,6 +52,11 @@ export default function App() {
             component={BottomTabNavigator}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="Game"
+            component={Game}
+            options={{ title: "Partie en cours" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
@@ -68,8 +75,8 @@ const BottomTabNavigator = () => {
         }}
       />
       <BottomTab.Screen
-        name="NewGame"
-        component={NewGame}
+        name="CreateGame"
+        component={CreateGame}
         options={{
           title: "Nouvelle partie",
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,

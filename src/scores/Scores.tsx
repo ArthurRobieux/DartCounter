@@ -1,11 +1,18 @@
-import { Button, Text, View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { Text, View } from "react-native";
 
 import { styles } from "./styles";
 
 export const Scores = () => {
   return (
     <View style={styles.scores}>
-      <Text>Scores</Text>
+      <FontAwesome
+        size={60}
+        style={{ marginBottom: 24 }}
+        name="trophy"
+        color="gray"
+      />
+      <Text>Vous retrouverez ici les scores de vos parties.</Text>
     </View>
   );
 };
