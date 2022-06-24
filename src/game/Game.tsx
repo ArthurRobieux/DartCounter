@@ -7,15 +7,19 @@ import { styles } from "./styles";
 export const Game = () => {
   const [score, setScore] = useState(301);
   const [win, setWin] = useState(false);
+  const [multiplier, setMultiplier] = useState(1);
   const [currentDarts, setCurrentDarts] = useState<number[]>([]);
 
   const onPress = (value: number) => {
-    setScore(score - value);
+    const v = value * multiplier;
+
+    setScore(score - v);
 
     let d = [...currentDarts];
-    if (d.length < 3) d.push(value);
-    else d = [value];
+    if (d.length < 3) d.push(v);
+    else d = [v];
     setCurrentDarts(d);
+    setMultiplier(1);
   };
 
   useEffect(() => {
@@ -44,6 +48,21 @@ export const Game = () => {
         {currentDarts.map((d, i) => (
           <Text style={styles.dart} key={i}>
             {d}
+          </Text>
+        ))}
+      </View>
+
+      <View style={styles.multiplierList}>
+        {[...Array(3).keys()].map((index) => (
+          <Text
+            style={[
+              styles.multiplier,
+              multiplier === index + 1 && styles.selected,
+            ]}
+            key={index + 1}
+            onPress={() => setMultiplier(index + 1)}
+          >
+            X {index + 1}
           </Text>
         ))}
       </View>

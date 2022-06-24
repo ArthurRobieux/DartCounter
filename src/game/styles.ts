@@ -24,7 +24,6 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     borderColor: "red",
     borderWidth: 1,
-    backgroundColor: "lightgray",
   },
   dartList: {
     display: "flex",
@@ -34,4 +33,23 @@ export const styles = StyleSheet.create({
   },
   dart: { padding: 10 },
   icon: { marginBottom: 20 },
+  multiplierList: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    height: 50,
+  },
+  multiplier: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    borderColor: "green",
+    borderWidth: 1,
+    padding: 10,
+  },
+  selected: {
+    backgroundColor: "green",
+    color: "#fff",
+  },
 });
