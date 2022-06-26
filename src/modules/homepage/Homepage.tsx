@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Button, Text, View } from "react-native";
-import { RootTabScreenProps } from "../../App";
+import { RootTabScreenProps } from "../../types";
 
 import { styles } from "./styles";
 

@@ -1,64 +1,49 @@
+import { createContext, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { FontAwesome } from "@expo/vector-icons";
 
-import {
-  NavigationContainer,
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import {
-  createBottomTabNavigator,
-  BottomTabScreenProps,
-} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Homepage } from "./src/homepage/Homepage";
-import { CreateGame } from "./src/creategame/CreateGame";
-import { Scores } from "./src/scores/Scores";
-import { Game } from "./src/game/Game";
-
-export type RootStackParamList = {
-  Root: NavigatorScreenParams<RootTabParamList> | undefined;
-  Game: undefined;
-};
-
-export type RootTabParamList = {
-  Home: undefined;
-  CreateGame: undefined;
-  Scores: undefined;
-};
-
-export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
-  CompositeScreenProps<
-    BottomTabScreenProps<RootTabParamList, Screen>,
-    NativeStackScreenProps<RootStackParamList>
-  >;
+import { Homepage } from "./src/modules/homepage/Homepage";
+import { CreateGame } from "./src/modules/creategame/CreateGame";
+import { Scores } from "./src/modules/scores/Scores";
+import { Game } from "./src/modules/game/Game";
+import { RootTabParamList, Team } from "./src/types";
+import { TabBarIcon } from "./src/common-ui";
+import { Context } from "./src/context";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 export default function App() {
+  const [teams, setTeams] = useState([
+    {
+      players: [""],
+    },
+  ]);
+
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Root"
-            component={BottomTabNavigator}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Game"
-            component={Game}
-            options={{ title: "Partie en cours" }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Context.Provider value={{ teams, setTeams }}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Root"
+              component={BottomTabNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Game"
+              component={Game}
+              options={{ title: "Partie en cours" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Context.Provider>
     </SafeAreaProvider>
   );
 }
@@ -93,10 +78,3 @@ const BottomTabNavigator = () => {
     </BottomTab.Navigator>
   );
 };
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
