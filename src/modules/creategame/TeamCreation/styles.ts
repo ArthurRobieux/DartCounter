@@ -19,4 +19,10 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
+  button: {
+    padding: 10,
+    textAlign: "center",
+    width: "100%",
+    marginTop: 10,
+  },
 });

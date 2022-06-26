@@ -1,51 +1,102 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { styles } from "./styles";
+import { Context } from "../../context";
 
 export const Game = () => {
-  const [score, setScore] = useState(301);
-  const [win, setWin] = useState(false);
+  const context = useContext(Context);
+
   const [multiplier, setMultiplier] = useState(1);
-  const [currentDarts, setCurrentDarts] = useState<number[]>([]);
+
+  const [currentTeam, setCurrentTeam] = useState(0);
+  const [scores, setScores] = useState<number[]>([]);
+  const [currentDarts, setCurrentDarts] = useState<number[][]>([]);
+
+  const [win, setWin] = useState<string | null>(null);
+
+  useEffect(() => {
+    const s: number[] = [];
+    const d: number[][] = [];
+
+    context.teams.forEach(() => {
+      s.push(301);
+      d.push([]);
+    });
+
+    setScores(s);
+    setCurrentDarts(d);
+  }, []);
+
+  const changeTeam = () => {
+    setCurrentTeam(
+      currentTeam + 1 < context.teams.length ? currentTeam + 1 : 0
+    );
+  };
 
   const onPress = (value: number) => {
-    const v = value * multiplier;
+    const v = value * ([25, 50].includes(value) ? 1 : multiplier);
 
-    setScore(score - v);
+    const s = [...scores];
+    s[currentTeam] -= v;
+    setScores(s);
 
     let d = [...currentDarts];
-    if (d.length < 3) d.push(v);
-    else d = [v];
+    if (d[currentTeam].length < 3) d[currentTeam].push(v);
+    else d[currentTeam] = [v];
     setCurrentDarts(d);
+
+    if (d[currentTeam].length === 3) changeTeam();
+
     setMultiplier(1);
   };
 
   useEffect(() => {
-    if (score === 0) setWin(true);
-    if (score < 0) {
-      let newScore = score;
-      currentDarts.forEach((d) => (newScore += d));
-      setScore(newScore);
-      setCurrentDarts([]);
+    if (scores[currentTeam] === 0) setWin(`Equipe ${currentTeam + 1}`);
+    if (scores[currentTeam] < 0) {
+      let newScores = scores;
+      currentDarts[currentTeam].forEach((d) => (newScores[currentTeam] += d));
+      setScores(newScores);
+
+      let newDarts = [...currentDarts];
+      newDarts[currentTeam] = [];
+      setCurrentDarts(newDarts);
+
+      changeTeam();
     }
-  }, [score]);
+  }, [scores]);
+
+  if (!context.teams.length || !scores.length || !currentDarts.length)
+    return (
+      <View style={styles.game}>
+        <Text style={styles.score}>Pas d'équipe participante.</Text>
+      </View>
+    );
 
   if (win)
     return (
       <View style={styles.game}>
-        <Text style={styles.score}>Félicitations, partie terminée !</Text>
+        <Text style={styles.score}>Félicitations {win},</Text>
+        <Text style={styles.score}>Vous avez gagné !</Text>
       </View>
     );
 
   return (
     <View style={styles.game}>
       <Feather name="target" size={60} color="gray" style={styles.icon} />
-      <Text style={styles.score}>Score restant : {score}</Text>
+
+      <Text style={styles.score}>Equipe {currentTeam + 1}</Text>
+      <Text style={styles.score}>Score restant : {scores[currentTeam]}</Text>
+
+      {context.teams.map((_, teamIndex) => (
+        <Text key={teamIndex}>
+          Equipe {teamIndex + 1} : {scores[teamIndex]}
+        </Text>
+      ))}
 
       <View style={styles.dartList}>
-        {currentDarts.map((d, i) => (
+        {currentDarts[currentTeam].map((d, i) => (
           <Text style={styles.dart} key={i}>
             {d}
           </Text>

@@ -1,5 +1,12 @@
 import { useContext, useState } from "react";
-import { Button, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  Button,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Context } from "../../../context";
 
 import { styles } from "./styles";
@@ -19,6 +26,10 @@ export const TeamCreation = () => {
     const newTeams = [...context.teams];
     newTeams[teamIndex].players.push("");
     context.setTeams(newTeams);
+  };
+
+  const reset = () => {
+    context.setTeams([{ players: [""] }]);
   };
 
   return (
@@ -43,18 +54,16 @@ export const TeamCreation = () => {
             ))}
             <Button
               onPress={() => addPlayer(teamIndex)}
-              // disabled={team.players.length > 2}
               title="+ Ajouter un Joueur"
             />
           </View>
         </View>
       ))}
 
-      <Button
-        onPress={addTeam}
-        // disabled={teams.length > 1}
-        title="+ Ajouter une équipe"
-      />
+      <Button onPress={addTeam} title="+ Ajouter une équipe" />
+      <Pressable onPress={reset} style={styles.button}>
+        <Text>Rénitialiser</Text>
+      </Pressable>
     </ScrollView>
   );
 };
